@@ -1,0 +1,119 @@
+[gd_scene format=4 uid="uid://827hlqdebq3r"]
+
+[ext_resource type="PackedScene" uid="uid://b7n0pwm7kps0q" path="res://Entities/Amos.tscn" id="1_fjdx3"]
+[ext_resource type="PackedScene" uid="uid://bqv3er4nssq7q" path="res://Entities/Camera2d.tscn" id="1_jh6v4"]
+[ext_resource type="Texture2D" uid="uid://fe1o17nwaw8f" path="res://Assets/Sprite/Cave/00-background.png" id="1_lh4rs"]
+[ext_resource type="Texture2D" uid="uid://dxc5xvuuiays5" path="res://Assets/Sprite/Cave/03-paralax3.png" id="2_fjdx3"]
+[ext_resource type="Texture2D" uid="uid://j067nory75t2" path="res://Assets/Sprite/Cave/02-paralax2.png" id="3_vog7l"]
+[ext_resource type="Texture2D" uid="uid://lgleuvma2e4h" path="res://Assets/Sprite/Cave/01-paralax1.png" id="4_jh6v4"]
+[ext_resource type="Texture2D" uid="uid://brwitbf0vnten" path="res://Assets/Sprite/GeneralTiles/tiles 1.png" id="6_vog7l"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jh6v4"]
+texture = ExtResource("6_vog7l")
+texture_region_size = Vector2i(64, 64)
+0:0/0 = 0
+0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-32, -18.063164, 32, -18.063164, 32, 32, -32, 32)
+1:0/0 = 0
+1:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-32, -18.063164, 32, -18.063164, 32, 32, -32, 32)
+2:0/0 = 0
+2:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-32, -18.063164, 32, -18.063164, 32, 32, -32, 32)
+3:0/0 = 0
+3:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-32, -18.063164, 32, -18.063164, 32, 32, -32, 32)
+0:1/0 = 0
+0:1/0/physics_layer_0/polygon_0/points = PackedVector2Array(-32, -32, 32, -32, 32, 32, -32, 32)
+3:1/0 = 0
+3:1/0/physics_layer_0/polygon_0/points = PackedVector2Array(-32, -32, 32, -32, 32, 32, -32, 32)
+2:1/0 = 0
+2:1/0/physics_layer_0/polygon_0/points = PackedVector2Array(-32, -32, 32, -32, 32, 32, -32, 32)
+1:1/0 = 0
+1:1/0/physics_layer_0/polygon_0/points = PackedVector2Array(-32, -32, 32, -32, 32, 32, -32, 32)
+7:0/0 = 0
+7:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-32, -20.885532, 32, -20.885532, 32, 32, -32, 32)
+6:0/0 = 0
+6:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-32, -20.885532, 32, -20.885532, 32, 32, -32, 32)
+8:1/0 = 0
+8:0/0 = 0
+8:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-32, -20.885532, 32, -20.885532, 32, 32, -32, 32)
+6:1/0 = 0
+7:1/0 = 0
+9:1/0 = 0
+9:0/0 = 0
+9:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-32, -20.885532, 32, -20.885532, 32, 32, -32, 32)
+10:0/0 = 0
+10:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-32, -20.885532, 32, -20.885532, 32, 32, -32, 32)
+10:1/0 = 0
+11:1/0 = 0
+11:0/0 = 0
+11:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-32, -20.885532, 32, -20.885532, 32, 32, -32, 32)
+12:0/0 = 0
+12:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-32, -20.885532, 32, -20.885532, 32, 32, -32, 32)
+12:1/0 = 0
+12:1/0/physics_layer_0/polygon_0/points = PackedVector2Array(-32, -32, 32, -32, 32, 32, -32, 32)
+13:1/0 = 0
+13:1/0/physics_layer_0/polygon_0/points = PackedVector2Array(-32, -32, 32, -32, 32, 32, -32, 32)
+13:0/0 = 0
+13:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-32, -20.885532, 32, -20.885532, 32, 32, -32, 32)
+
+[sub_resource type="TileSet" id="TileSet_0ws12"]
+tile_size = Vector2i(64, 64)
+physics_layer_0/collision_layer = 1
+sources/0 = SubResource("TileSetAtlasSource_jh6v4")
+
+[node name="1-Cave" type="Node2D" unique_id=770727640]
+
+[node name="Amos" parent="." unique_id=363534425 groups=["Amos"] instance=ExtResource("1_fjdx3")]
+z_index = 2
+position = Vector2(174, 438)
+
+[node name="Camera2D" parent="." unique_id=472396278 instance=ExtResource("1_jh6v4")]
+position = Vector2(-3, 0)
+limit_top = 0
+
+[node name="CaveParallax" type="Node" parent="." unique_id=116501809]
+
+[node name="CaveBackground" type="Parallax2D" parent="CaveParallax" unique_id=1820499867]
+scroll_scale = Vector2(0, 0)
+
+[node name="CaveBackground" type="Sprite2D" parent="CaveParallax/CaveBackground" unique_id=1541852989]
+texture = ExtResource("1_lh4rs")
+centered = false
+region_enabled = true
+region_rect = Rect2(0, 0, 4096, 576)
+
+[node name="3-ParalaxCave3" type="Parallax2D" parent="CaveParallax" unique_id=402375076]
+scroll_scale = Vector2(0.2, 0.2)
+
+[node name="3-ParalaxCave3" type="Sprite2D" parent="CaveParallax/3-ParalaxCave3" unique_id=843661009]
+texture_repeat = 2
+texture = ExtResource("2_fjdx3")
+centered = false
+region_enabled = true
+region_rect = Rect2(0, 0, 4096, 576)
+
+[node name="2-ParalaxCave2" type="Parallax2D" parent="CaveParallax" unique_id=478198735]
+scroll_scale = Vector2(0.4, 0.4)
+
+[node name="2-ParalaxCave2" type="Sprite2D" parent="CaveParallax/2-ParalaxCave2" unique_id=1125590602]
+texture_repeat = 2
+texture = ExtResource("3_vog7l")
+centered = false
+region_enabled = true
+region_rect = Rect2(0, 0, 4096, 576)
+
+[node name="1-ParalaxCave1" type="Parallax2D" parent="CaveParallax" unique_id=1002173439]
+scroll_scale = Vector2(0.6, 0.6)
+
+[node name="1-ParalaxCave1" type="Sprite2D" parent="CaveParallax/1-ParalaxCave1" unique_id=1089819806]
+texture_repeat = 2
+texture = ExtResource("4_jh6v4")
+centered = false
+region_enabled = true
+region_rect = Rect2(0, 0, 4096, 576)
+
+[node name="GeneralTileMap" type="Node" parent="." unique_id=1046307016]
+
+[node name="TileMapLayer" type="TileMapLayer" parent="GeneralTileMap" unique_id=683444893]
+tile_map_data = PackedByteArray("AAAAAAcAAAAGAAAAAAAAAAgAAAAGAAEAAAABAAcAAAAHAAAAAAABAAgAAAAHAAEAAAACAAcAAAAIAAAAAAACAAgAAAAIAAEAAAADAAcAAAAJAAAAAAADAAgAAAAJAAEAAAAEAAcAAAAKAAAAAAAEAAgAAAAKAAEAAAAFAAcAAAALAAAAAAAFAAgAAAALAAEAAAAGAAcAAAAMAAAAAAAGAAgAAAAMAAEAAAAHAAcAAAAHAAAAAAAHAAgAAAAHAAEAAAAIAAcAAAAIAAAAAAAIAAgAAAAIAAEAAAAJAAcAAAAJAAAAAAAJAAgAAAAJAAEAAAAKAAcAAAAKAAAAAAAKAAgAAAAKAAEAAAALAAcAAAALAAAAAAALAAgAAAALAAEAAAAMAAcAAAAMAAAAAAAMAAgAAAAMAAEAAAANAAcAAAAHAAAAAAANAAgAAAAHAAEAAAAOAAcAAAAIAAAAAAAOAAgAAAAIAAEAAAAPAAcAAAAJAAAAAAAPAAgAAAAJAAEAAAAQAAcAAAAKAAAAAAAQAAgAAAAKAAEAAAARAAcAAAALAAAAAAARAAgAAAALAAEAAAASAAcAAAAMAAAAAAASAAgAAAAMAAEAAAATAAcAAAAHAAAAAAATAAgAAAAHAAEAAAAUAAcAAAAIAAAAAAAUAAgAAAAIAAEAAAAVAAcAAAAJAAAAAAAVAAgAAAAJAAEAAAAWAAcAAAAKAAAAAAAWAAgAAAAKAAEAAAAXAAcAAAALAAAAAAAXAAgAAAALAAEAAAAYAAcAAAAMAAAAAAAYAAgAAAAMAAEAAAAZAAcAAAAHAAAAAAAZAAgAAAAHAAEAAAAaAAcAAAAIAAAAAAAaAAgAAAAIAAEAAAAbAAcAAAAJAAAAAAAbAAgAAAAJAAEAAAAcAAcAAAAKAAAAAAAcAAgAAAAKAAEAAAAdAAcAAAALAAAAAAAdAAgAAAALAAEAAAAeAAcAAAAMAAAAAAAeAAgAAAAMAAEAAAAfAAcAAAAHAAAAAAAfAAgAAAAHAAEAAAAgAAcAAAAIAAAAAAAgAAgAAAAIAAEAAAAhAAcAAAAJAAAAAAAhAAgAAAAJAAEAAAAiAAcAAAAKAAAAAAAiAAgAAAAKAAEAAAAjAAcAAAALAAAAAAAjAAgAAAALAAEAAAAkAAcAAAAMAAAAAAAkAAgAAAAMAAEAAAAlAAcAAAAHAAAAAAAlAAgAAAAHAAEAAAAmAAcAAAAIAAAAAAAmAAgAAAAIAAEAAAAnAAcAAAAJAAAAAAAnAAgAAAAJAAEAAAAoAAcAAAAKAAAAAAAoAAgAAAAKAAEAAAApAAcAAAALAAAAAAApAAgAAAALAAEAAAAqAAcAAAAMAAAAAAAqAAgAAAAMAAEAAAArAAcAAAAHAAAAAAArAAgAAAAHAAEAAAAsAAcAAAAIAAAAAAAsAAgAAAAIAAEAAAAtAAcAAAAJAAAAAAAtAAgAAAAJAAEAAAAuAAcAAAAKAAAAAAAuAAgAAAAKAAEAAAAvAAcAAAALAAAAAAAvAAgAAAALAAEAAAAwAAcAAAAMAAAAAAAwAAgAAAAMAAEAAAAxAAcAAAAHAAAAAAAxAAgAAAAHAAEAAAAyAAcAAAAIAAAAAAAyAAgAAAAIAAEAAAAzAAcAAAAJAAAAAAAzAAgAAAAJAAEAAAA0AAcAAAAKAAAAAAA0AAgAAAAKAAEAAAA1AAcAAAALAAAAAAA1AAgAAAALAAEAAAA2AAcAAAAMAAAAAAA2AAgAAAAMAAEAAAA3AAcAAAAHAAAAAAA3AAgAAAAHAAEAAAA4AAcAAAAIAAAAAAA4AAgAAAAIAAEAAAA5AAcAAAAJAAAAAAA5AAgAAAAJAAEAAAA6AAcAAAAKAAAAAAA6AAgAAAAKAAEAAAA7AAcAAAALAAAAAAA7AAgAAAALAAEAAAA8AAcAAAAMAAAAAAA8AAgAAAAMAAEAAAA9AAcAAAAHAAAAAAA9AAgAAAAHAAEAAAA+AAcAAAAIAAAAAAA+AAgAAAAIAAEAAAA/AAcAAAAJAAAAAAA/AAgAAAAJAAEAAABAAAcAAAAKAAAAAABAAAgAAAAKAAEAAABBAAcAAAALAAAAAABBAAgAAAALAAEAAABCAAcAAAAMAAAAAABCAAgAAAAMAAEAAAA=")
+tile_set = SubResource("TileSet_0ws12")
+rendering_quadrant_size = 64
+physics_quadrant_size = 64
