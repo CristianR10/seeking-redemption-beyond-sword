@@ -4,10 +4,6 @@ using System;
 public partial class Amos : CharacterBody2D
 {
 	public const float Speed = 200.0f;
-	public const float JumpForce = -300.0f;
-
-	const float Gravity = 1200f;
-
 	const float Acceleration = 5.0f;
 
 	private AnimatedSprite2D _animator;
@@ -22,6 +18,7 @@ public partial class Amos : CharacterBody2D
 	}
 
 	private PlayerState Status;
+	private JumpController _jump = new();
 
 	private void PlayAnimation(string animName)
 	{
@@ -105,10 +102,11 @@ public partial class Amos : CharacterBody2D
 			vel.X = Mathf.Lerp(vel.X, 0f, Friction * delta);
 		}
 
-		if (Input.IsActionJustPressed("ui_up") && IsOnFloor())
+		// Apenas informa ao controlador que o jogador apertou pular.
+		// Ele decidirá se o pulo pode acontecer (Jump Buffer + Coyote Time).
+		if (Input.IsActionJustPressed("ui_up"))
 		{
-			vel.Y = JumpForce;
-			Status = PlayerState.Jump;
+			_jump.PressJump();
 		}
 
 		return vel;
@@ -135,34 +133,41 @@ public partial class Amos : CharacterBody2D
 	{
 		Vector2 vel = Velocity;
 
-		if (!IsOnFloor())
-		{
-			vel.Y += Gravity * (float)delta;
-
-			// AJUSTE DE SEGURANÇA: Se o jogador cair de uma plataforma sem pular
-			if (Status != PlayerState.Jump && Status != PlayerState.Down)
-			{
-				Status = PlayerState.Down;
-			}
-		}
-		else if (Status != PlayerState.Jump)
-		{
-			vel.Y = 0;
-		}
+		vel = _jump.Update(
+			vel,
+			IsOnFloor(),
+			Input.IsActionJustReleased("ui_up"),
+			(float)delta
+		);
 
 		Velocity = vel;
 
+		if (!IsOnFloor() && Velocity.Y < 0)
+		{
+			Status = PlayerState.Jump;
+		}
+
 		switch (Status)
 		{
-			case PlayerState.Idle: IdleState(); break;
-			case PlayerState.Walk: WalkState(); break;
-			case PlayerState.Jump: JumpState(); break;
-			case PlayerState.Down: DownState(); break;
+			case PlayerState.Idle:
+				IdleState();
+				break;
+
+			case PlayerState.Walk:
+				WalkState();
+				break;
+
+			case PlayerState.Jump:
+				JumpState();
+				break;
+
+			case PlayerState.Down:
+				DownState();
+				break;
 		}
 
 		MoveAndSlide();
 	}
-
 	public override void _Ready()
 	{
 		_animator = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
