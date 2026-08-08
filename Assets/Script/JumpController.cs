@@ -6,7 +6,8 @@ public class JumpController
 {
     /// Altura máxima do pulo em pixels.
     /// 64 = 4 tiles de 16px.
-    public float JumpHeight = 64f;
+    // public float JumpHeight = 85f; ideal
+    public float JumpHeight = 128f; //teste
     /// Tempo até atingir o topo do pulo.
     /// Quanto menor, mais "seco" será o pulo.    
     public float TimeToPeak = 0.35f;

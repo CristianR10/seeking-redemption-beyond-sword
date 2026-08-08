@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://j067nory75t2"
-path="res://.godot/imported/02-paralax2.png-b820074389e83dc642a7e4c09f72a0bd.ctex"
+uid="uid://l0j1y3ayiiig"
+path="res://.godot/imported/camada1.png-828d7f892e9eb86324897cbb29277931.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Sprite/Cave/02-paralax2.png"
-dest_files=["res://.godot/imported/02-paralax2.png-b820074389e83dc642a7e4c09f72a0bd.ctex"]
+source_file="res://Assets/Sprite/Cave/camada1.png"
+dest_files=["res://.godot/imported/camada1.png-828d7f892e9eb86324897cbb29277931.ctex"]
 
 [params]
 

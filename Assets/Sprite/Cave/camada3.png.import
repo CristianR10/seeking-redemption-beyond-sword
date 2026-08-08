@@ -2,12 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cb1iwffnnb0yo"
-valid=false
+uid="uid://dusbjalic35j0"
+path="res://.godot/imported/camada3.png-182d99f69d05de20a0849baaa3257b63.ctex"
+metadata={
+"vram_texture": false
+}
 
 [deps]
 
-source_file="res://icon-amos.png"
+source_file="res://Assets/Sprite/Cave/camada3.png"
+dest_files=["res://.godot/imported/camada3.png-182d99f69d05de20a0849baaa3257b63.ctex"]
 
 [params]
 

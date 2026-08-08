@@ -2,6 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://cev0xs1y81tor" path="res://Assets/Sprite/Persona/AMOS movimentos_.png" id="1_74bwa"]
 [ext_resource type="Script" uid="uid://dai6la5g06mf6" path="res://Assets/Script/Amos.cs" id="1_ykoaq"]
+[ext_resource type="Texture2D" uid="uid://csykjefsn4lfl" path="res://Assets/Sprite/Persona/moveset Amos.png" id="3_uxsh2"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_74bwa"]
 radius = 19.0
@@ -111,6 +112,30 @@ region = Rect2(320, 213, 64, 71)
 atlas = ExtResource("1_74bwa")
 region = Rect2(0, 284, 64, 71)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_lq8jv"]
+atlas = ExtResource("3_uxsh2")
+region = Rect2(243, 390, 81, 78)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nhyfa"]
+atlas = ExtResource("3_uxsh2")
+region = Rect2(324, 390, 81, 78)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2xic3"]
+atlas = ExtResource("3_uxsh2")
+region = Rect2(405, 390, 81, 78)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lersb"]
+atlas = ExtResource("3_uxsh2")
+region = Rect2(486, 390, 81, 78)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gnohg"]
+atlas = ExtResource("3_uxsh2")
+region = Rect2(567, 390, 81, 78)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_he81d"]
+atlas = ExtResource("3_uxsh2")
+region = Rect2(0, 468, 81, 78)
+
 [sub_resource type="SpriteFrames" id="SpriteFrames_ror3y"]
 animations = [{
 "frames": [{
@@ -210,6 +235,29 @@ animations = [{
 "loop": true,
 "name": &"Walk",
 "speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lq8jv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nhyfa")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2xic3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lersb")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gnohg")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_he81d")
+}],
+"loop": false,
+"name": &"Wall",
+"speed": 5.0
 }]
 
 [node name="Amos" type="CharacterBody2D" unique_id=363534425]
@@ -222,7 +270,19 @@ shape = SubResource("CapsuleShape2D_74bwa")
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1428401192]
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=983125781]
+position = Vector2(-4, -1)
 sprite_frames = SubResource("SpriteFrames_ror3y")
-animation = &"Walk"
+animation = &"Wall"
 autoplay = "Idle"
-frame_progress = 0.04605979
+frame = 5
+frame_progress = 1.0
+
+[node name="TopWallDetected" type="RayCast2D" parent="." unique_id=1484509962]
+position = Vector2(-5, -4)
+target_position = Vector2(13, -23)
+
+[node name="LeftWallDetected" type="RayCast2D" parent="." unique_id=973935261]
+target_position = Vector2(-26, 0)
+
+[node name="RightWallDetected" type="RayCast2D" parent="." unique_id=1117280712]
+target_position = Vector2(14, 0)

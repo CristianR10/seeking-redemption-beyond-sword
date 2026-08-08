@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://fe1o17nwaw8f"
-path="res://.godot/imported/00-background.png-387a3c28013915beb5c2d80c0531228a.ctex"
+uid="uid://csykjefsn4lfl"
+path="res://.godot/imported/moveset Amos.png-23b9488d4cf169be78196a4cbe1473b5.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Sprite/Cave/00-background.png"
-dest_files=["res://.godot/imported/00-background.png-387a3c28013915beb5c2d80c0531228a.ctex"]
+source_file="res://Assets/Sprite/Persona/moveset Amos.png"
+dest_files=["res://.godot/imported/moveset Amos.png-23b9488d4cf169be78196a4cbe1473b5.ctex"]
 
 [params]
 

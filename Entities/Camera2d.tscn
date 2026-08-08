@@ -4,6 +4,8 @@
 
 [node name="Camera2D" type="Camera2D" unique_id=472396278]
 limit_left = 0
-limit_bottom = 576
+limit_top = 0
+limit_right = 2944
+limit_bottom = 384
 position_smoothing_enabled = true
 script = ExtResource("1_an4g3")
