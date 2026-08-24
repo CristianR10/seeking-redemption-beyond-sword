@@ -3,47 +3,33 @@ using Godot;
 public class WallController
 {
     private const float WallClimbSpeed = 100.0f;
-
-    private const float WallJumpForceX = 250.0f;
-    private const float WallJumpForceY = -300.0f;
-
-    // Velocidade da transição para o topo.
-    private const float TopTransitionSpeed = 100.0f;
-
-    // Distância que o personagem precisa avançar
-    // para entrar na plataforma.
-    private const float TopForwardDistance = 16.0f;
+    private const float WallJumpForceX = 500.0f;
+    private const float WallJumpForceY = -500.0f;
+    private const float WallRayDisableTimeAfterTopJump = 0.50f;
 
     private RayCast2D _leftRay;
     private RayCast2D _rightRay;
-    private RayCast2D _topRay;
+
+    private RayCast2D _topRayRight;
+    private RayCast2D _topRayLeft;
 
     public bool IsAttached { get; private set; }
-
     public bool IsAtTop { get; private set; }
-
-    // Indica que o personagem está executando
-    // a transição da parede para a plataforma.
-    public bool IsTransitioningTop { get; private set; }
-
-    // -1 = parede à esquerda
-    //  1 = parede à direita
-    //  0 = nenhuma parede
     public int WallDirection { get; private set; }
 
-    private Vector2 _topStartPosition;
-
-    private Vector2 _topTargetPosition;
+    private float _wallRayDisableTimer;
 
     public void Initialize(
         RayCast2D leftRay,
         RayCast2D rightRay,
-        RayCast2D topRay
-    )
+        RayCast2D topRayRight,
+        RayCast2D topRayLeft)
     {
         _leftRay = leftRay;
         _rightRay = rightRay;
-        _topRay = topRay;
+
+        _topRayRight = topRayRight;
+        _topRayLeft = topRayLeft;
 
         if (_leftRay == null)
         {
@@ -61,39 +47,50 @@ public class WallController
             );
         }
 
-        if (_topRay == null)
+        if (_topRayRight == null)
         {
             throw new System.ArgumentNullException(
-                nameof(topRay),
-                "TopWallDetected não foi encontrado."
+                nameof(topRayRight),
+                "TopWallDetectedRight não foi encontrado."
+            );
+        }
+
+        if (_topRayLeft == null)
+        {
+            throw new System.ArgumentNullException(
+                nameof(topRayLeft),
+                "TopWallDetectedLeft não foi encontrado."
             );
         }
     }
 
-    public void Update(CharacterBody2D player)
+    public void Update(CharacterBody2D player, float delta)
     {
-        // ============================================================
-        // TRANSIÇÃO DO TOPO
-        // ============================================================
-
-        // Se já estamos fazendo a transição da quina,
-        // NÃO fazemos mais nenhuma detecção da parede.
-        //
-        // Isso é muito importante.
-        //
-        // Os RayCast esquerdo/direito podem continuar
-        // detectando ou deixar de detectar a parede.
-        // Durante a transição isso não importa.
-        if (IsAtTop)
+        if (_wallRayDisableTimer > 0.0f)
         {
+            _wallRayDisableTimer -= delta;
             return;
         }
 
-        // ============================================================
-        // CHÃO
-        // ============================================================
+        if (IsAtTop)
+        {
+            /*
+            * Mesmo estando no topo, o jogador pode escolher
+            * descer novamente pela parede.
+            *
+            * Como o RayCast lateral ainda está colidindo,
+            * podemos continuar agarrados à parede.
+            */
+            if (Input.IsActionPressed("ui_down"))
+            {
+                IsAtTop = false;
+            }
+            else
+            {
+                return;
+            }
+        }
 
-        // No chão, não podemos ficar grudados na parede.
         if (player.IsOnFloor())
         {
             Release();
@@ -103,85 +100,11 @@ public class WallController
         bool wallLeft = _leftRay.IsColliding();
         bool wallRight = _rightRay.IsColliding();
 
-        // ============================================================
-        // JÁ ESTÁ GRUDADO
-        // ============================================================
-
         if (IsAttached)
         {
-            // --------------------------------------------------------
-            // PRIMEIRO verificamos o topo.
-            // --------------------------------------------------------
-            //
-            // Isso precisa acontecer ANTES de verificar
-            // se o RayCast lateral ainda está colidindo.
-            //
-            // Na quina é normal o RayCast lateral perder
-            // a colisão.
-            //
-            if (Input.IsActionPressed("ui_up") &&
-                _topRay.IsColliding())
-            {
-                IsAtTop = true;
-
-                // NÃO damos Release().
-                // NÃO entramos em Down.
-                // NÃO zeramos a velocidade aqui.
-                return;
-            }
-
-            // --------------------------------------------------------
-            // PAREDE
-            // --------------------------------------------------------
-
-            bool stillOnWall =
-                WallDirection == -1
-                    ? wallLeft
-                    : wallRight;
-
-            if (stillOnWall)
-            {
-                // Continua normalmente grudado.
-                return;
-            }
-
-            // --------------------------------------------------------
-            // RAYCAST PERDEU A PAREDE
-            // --------------------------------------------------------
-            //
-            // NÃO soltamos imediatamente.
-            //
-            // Isso evita o efeito:
-            //
-            // Wall -> Down -> Wall -> Down
-            //
-            // causado pela pequena diferença entre o collider
-            // e o RayCast.
-            //
-            // Se o jogador estiver tentando subir e o TopRay
-            // ainda não encontrou a quina, mantemos a parede.
-            if (Input.IsActionPressed("ui_up"))
-            {
-                return;
-            }
-
-            // Se estiver descendo, também permitimos que
-            // o movimento continue até chegar ao chão.
-            if (Input.IsActionPressed("ui_down"))
-            {
-                return;
-            }
-
-            // Sem intenção de subir/descer e sem parede,
-            // agora sim podemos soltar.
-            Release();
-
+            HandleClimbing();
             return;
         }
-
-        // ============================================================
-        // AINDA NÃO ESTÁ GRUDADO
-        // ============================================================
 
         if (wallLeft)
         {
@@ -194,6 +117,50 @@ public class WallController
             Attach(1);
         }
     }
+
+    private void HandleClimbing()
+    {
+        if (Input.IsActionPressed("ui_up"))
+        {
+            /*
+             * Se estiver escalando pela esquerda,
+             * utiliza o TopRayLeft.
+             *
+             * Se estiver escalando pela direita,
+             * utiliza o TopRayRight.
+             */
+            RayCast2D topRay =
+                WallDirection == -1
+                    ? _topRayLeft
+                    : _topRayRight;
+
+            if (topRay.IsColliding())
+            {
+                return;
+            }
+
+            /*
+             * O TopRay deixou de detectar a parede/plataforma.
+             * Chegamos ao topo.
+             */
+            IsAtTop = true;
+
+            return;
+        }
+
+        bool stillOnWall =
+            WallDirection == -1
+                ? _leftRay.IsColliding()
+                : _rightRay.IsColliding();
+
+        if (stillOnWall)
+        {
+            return;
+        }
+
+        Release();
+    }
+
     private void Attach(int direction)
     {
         IsAttached = true;
@@ -201,119 +168,119 @@ public class WallController
         WallDirection = direction;
     }
 
-    // ============================================================
-    // TOP TRANSITION
-    // ============================================================
-
-    private void StartTopTransition(CharacterBody2D player)
-    {
-        IsAtTop = true;
-        IsTransitioningTop = true;
-
-        _topStartPosition = player.GlobalPosition;
-
-        // A posição alvo será construída gradualmente.
-        //
-        // Primeiro subimos aproximadamente a altura
-        // necessária para passar da quina.
-        float characterHeight = 16.0f;
-
-        _topTargetPosition = player.GlobalPosition;
-
-        _topTargetPosition.Y -= characterHeight;
-
-        // Depois avançamos para dentro da plataforma.
-        _topTargetPosition.X +=
-            WallDirection * TopForwardDistance;
-    }
-
     public Vector2 HandleWallMovement(Vector2 velocity)
     {
         if (!IsAttached)
-            return velocity;
-
-        // Durante a transição do topo,
-        // o WallMovement normal não deve interferir.
-        if (IsTransitioningTop)
-            return Vector2.Zero;
-
-        if (Input.IsActionPressed("ui_up"))
         {
-            // Sobe a parede.
+            return velocity;
+        }
+
+        if (IsAtTop)
+        {
+            /*
+             * No topo, UI_UP não faz o personagem voar.
+             *
+             * Porém, UI_DOWN libera a descida.
+             */
+            if (Input.IsActionPressed("ui_down"))
+            {
+                IsAtTop = false;
+                velocity.Y = WallClimbSpeed;
+            }
+            else
+            {
+                return Vector2.Zero;
+            }
+        }
+        else if (Input.IsActionPressed("ui_up"))
+        {
             velocity.Y = -WallClimbSpeed;
         }
         else if (Input.IsActionPressed("ui_down"))
         {
-            // Desce a parede.
             velocity.Y = WallClimbSpeed;
         }
         else
         {
-            // Sem input: fica literalmente parado na parede.
             velocity.Y = 0.0f;
         }
 
-        // Enquanto está grudado,
-        // não existe movimento horizontal.
         velocity.X = 0.0f;
 
         return velocity;
     }
 
-    public Vector2 HandleTopMovement(
-        CharacterBody2D player,
-        float delta
-    )
+    public bool ShouldTopJump()
     {
-        if (!IsTransitioningTop)
-            return Vector2.Zero;
-
-        Vector2 current = player.GlobalPosition;
-
-        Vector2 direction =
-            current.DirectionTo(_topTargetPosition);
-
-        float distance =
-            current.DistanceTo(_topTargetPosition);
-
-        // Chegamos ao destino.
-        if (distance <= 1.0f)
-        {
-            player.GlobalPosition = _topTargetPosition;
-
-            IsTransitioningTop = false;
-            IsAtTop = false;
-            IsAttached = false;
-            WallDirection = 0;
-
-            return Vector2.Zero;
-        }
-
-        return direction * TopTransitionSpeed;
+        return IsAtTop &&
+               Input.IsActionJustPressed("Jump_Space");
     }
 
-    public bool IsTopTransitionFinished()
+    public Vector2 GetTopJumpVelocity()
     {
-        return !IsTransitioningTop;
+        float inputX = Input.GetAxis("ui_left", "ui_right");
+
+        float jumpX = 0.0f;
+
+        if (inputX < 0.0f)
+        {
+            jumpX = -WallJumpForceX;
+        }
+        else if (inputX > 0.0f)
+        {
+            jumpX = WallJumpForceX;
+        }
+
+        Vector2 velocity = new Vector2(
+            jumpX,
+            WallJumpForceY
+        );
+
+        Release();
+
+        _wallRayDisableTimer =
+            WallRayDisableTimeAfterTopJump;
+
+        return velocity;
     }
 
     public Vector2 GetWallJumpVelocity()
     {
-        int jumpDirection = -WallDirection;
+        float inputX =
+            Input.GetAxis("ui_left", "ui_right");
+
+        if (!Mathf.IsZeroApprox(inputX))
+        {
+            Vector2 velocity = new Vector2(
+                Mathf.Sign(inputX) * WallJumpForceX,
+                WallJumpForceY
+            );
+
+            Release();
+
+            return velocity;
+        }
+
+        int direction =
+            WallDirection == -1
+                ? 1
+                : -1;
+
+        Vector2 wallJumpVelocity =
+            new Vector2(
+                direction * WallJumpForceX,
+                WallJumpForceY
+            );
 
         Release();
 
-        return new Vector2(
-            jumpDirection * WallJumpForceX,
-            WallJumpForceY
-        );
+        return wallJumpVelocity;
     }
 
     public void Release()
     {
         IsAttached = false;
         IsAtTop = false;
-        IsTransitioningTop = false;
         WallDirection = 0;
     }
 

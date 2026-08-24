@@ -277,9 +277,13 @@ autoplay = "Idle"
 frame = 5
 frame_progress = 1.0
 
-[node name="TopWallDetected" type="RayCast2D" parent="." unique_id=1484509962]
+[node name="TopRayLeft" type="RayCast2D" parent="." unique_id=1898635140]
+position = Vector2(-6, -4)
+target_position = Vector2(-26, -24)
+
+[node name="TopRayRight" type="RayCast2D" parent="." unique_id=1484509962]
 position = Vector2(-5, -4)
-target_position = Vector2(13, -23)
+target_position = Vector2(35, -27)
 
 [node name="LeftWallDetected" type="RayCast2D" parent="." unique_id=973935261]
 target_position = Vector2(-26, 0)

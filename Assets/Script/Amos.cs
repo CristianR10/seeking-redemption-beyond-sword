@@ -26,7 +26,6 @@ public partial class Amos : CharacterBody2D
 
 	private void PlayAnimation(string animName)
 	{
-		// Evita reiniciar a animação se ela já estiver tocando
 		if (_currentAnim == animName)
 			return;
 
@@ -34,26 +33,31 @@ public partial class Amos : CharacterBody2D
 			_animator.SpriteFrames.HasAnimation(animName))
 		{
 			_animator.Play(animName);
+
 			_currentAnim = animName;
 		}
 		else
 		{
-			GD.Print($"Animação '{animName}' Não encontrada no AnimatedSprite2D");
+			GD.Print(
+				$"Animação '{animName}' Não encontrada no AnimatedSprite2D"
+			);
 		}
 	}
 
 	public void GoToIdleState()
 	{
 		Status = PlayerState.Idle;
+
 		PlayAnimation("Idle");
 	}
 
 	private void IdleState(float delta)
 	{
-		Velocity = _movement.HandleGroundMovement(
-			Velocity,
-			delta
-		);
+		Velocity =
+			_movement.HandleGroundMovement(
+				Velocity,
+				delta
+			);
 
 		PlayAnimation("Idle");
 
@@ -65,19 +69,21 @@ public partial class Amos : CharacterBody2D
 
 	private void WalkState(float delta)
 	{
-		Velocity = _movement.HandleGroundMovement(
-			Velocity,
-			delta
-		);
+		Velocity =
+			_movement.HandleGroundMovement(
+				Velocity,
+				delta
+			);
 
 		PlayAnimation("Walk");
 
-		// Espelha o sprite baseado na direção do movimento
-		float inputX = _movement.GetInputDirection();
+		float inputX =
+			_movement.GetInputDirection();
 
 		if (inputX != 0)
 		{
-			_animator.FlipH = inputX < 0;
+			_animator.FlipH =
+				inputX < 0;
 		}
 
 		if (Mathf.Abs(Velocity.X) <= 1.0f)
@@ -88,10 +94,11 @@ public partial class Amos : CharacterBody2D
 
 	private void JumpState(float delta)
 	{
-		Velocity = _movement.HandleAirMovement(
-			Velocity,
-			delta
-		);
+		Velocity =
+			_movement.HandleAirMovement(
+				Velocity,
+				delta
+			);
 
 		PlayAnimation("Jump");
 
@@ -103,52 +110,69 @@ public partial class Amos : CharacterBody2D
 
 	private void DownState(float delta)
 	{
-		Velocity = _movement.HandleAirMovement(
-			Velocity,
-			delta
-		);
+		Velocity =
+			_movement.HandleAirMovement(
+				Velocity,
+				delta
+			);
 
 		PlayAnimation("Down");
 
 		if (IsOnFloor())
 		{
-			Status = Mathf.Abs(Velocity.X) > 1.0f
-				? PlayerState.Walk
-				: PlayerState.Idle;
+			Status =
+				Mathf.Abs(Velocity.X) > 1.0f
+					? PlayerState.Walk
+					: PlayerState.Idle;
 		}
 	}
 
 	private void WallState(float delta)
 	{
-		// Chegou ao topo.
+		/*
+         * Se chegou ao topo, muda para WallTop.
+         */
 		if (_wall.IsAtTop)
 		{
 			Status = PlayerState.WallTop;
+
 			return;
 		}
 
-		Velocity = _wall.HandleWallMovement(
-			Velocity
-		);
+		/*
+         * Movimento normal da parede.
+         */
+		Velocity =
+			_wall.HandleWallMovement(
+				Velocity
+			);
 
 		PlayAnimation("Wall");
 
-		// Olha para a parede.
-		_animator.FlipH = _wall.ShouldFlipSprite();
+		_animator.FlipH =
+			_wall.ShouldFlipSprite();
 
+		/*
+         * Se perdeu a parede,
+         * volta para o estado de queda.
+         */
 		if (!_wall.IsAttached)
 		{
 			Status = PlayerState.Down;
+
 			return;
 		}
 
-		// Wall Jump.
+		/*
+         * Salto normal da parede.
+         */
 		if (Input.IsActionJustPressed("Jump_Space"))
 		{
-			Velocity = _wall.GetWallJumpVelocity();
+			Velocity =
+				_wall.GetWallJumpVelocity();
 
-			// Olha para o lado para onde está pulando.
-			_animator.FlipH = Velocity.X < 0;
+			_animator.FlipH =
+				Velocity.X < 0;
 
 			Status = PlayerState.Jump;
 		}
@@ -158,49 +182,75 @@ public partial class Amos : CharacterBody2D
 	{
 		PlayAnimation("WallTop");
 
-		// Durante a transição, o personagem sobe
-		// e passa pela quina suavemente.
-		Velocity = _wall.HandleTopMovement(
-			this,
-			delta
-		);
+		/*
+		 * Fica completamente parado.
+		 *
+		 * Mesmo segurando UI_UP.
+		 */
+		Velocity = Vector2.Zero;
 
-		// Olha para a direção da plataforma.
-		_animator.FlipH = _wall.ShouldFlipSprite();
-
-		if (_wall.IsTopTransitionFinished())
+		/*
+		 * Só sai daqui quando apertar Jump_Space.
+		 */
+		if (_wall.ShouldTopJump())
 		{
-			Velocity = Vector2.Zero;
+			Velocity = _wall.GetTopJumpVelocity();
 
-			Status = PlayerState.Idle;
+			/*
+			 * A direção visual acompanha o input
+			 * usado no salto.
+			 */
+			if (Velocity.X < 0)
+			{
+				_animator.FlipH = true;
+			}
+			else if (Velocity.X > 0)
+			{
+				_animator.FlipH = false;
+			}
+
+			Status = PlayerState.Jump;
 		}
 	}
 
 	private void UpdateState()
 	{
-		// Se chegou ao topo da parede, o estado WallTop tem prioridade.
+		/*
+         * Topo da parede tem prioridade.
+         */
 		if (_wall.IsAtTop)
 		{
 			Status = PlayerState.WallTop;
+
 			return;
 		}
 
-		// Se estiver grudado na parede, o estado Wall tem prioridade.
+		/*
+         * Parede.
+         */
 		if (_wall.IsAttached)
 		{
 			Status = PlayerState.Wall;
+
 			return;
 		}
 
+		/*
+         * Chão.
+         */
 		if (IsOnFloor())
 		{
-			Status = Mathf.Abs(Velocity.X) > 1.0f
-				? PlayerState.Walk
-				: PlayerState.Idle;
+			Status =
+				Mathf.Abs(Velocity.X) > 1.0f
+					? PlayerState.Walk
+					: PlayerState.Idle;
 
 			return;
 		}
 
+		/*
+         * Ar.
+         */
 		if (Velocity.Y < 0)
 		{
 			Status = PlayerState.Jump;
@@ -215,15 +265,12 @@ public partial class Amos : CharacterBody2D
 	{
 		float dt = (float)delta;
 
-		// Atualiza o controlador de parede antes
-		// de decidir o estado.
-		_wall.Update(this);
+		_wall.Update(this, dt);
 
-		// ============================================================
-		// WALL TOP TRANSITION
-		// ============================================================
-
-		if (_wall.IsTransitioningTop)
+		/*
+		 * Chegou ao topo.
+		 */
+		if (_wall.IsAtTop)
 		{
 			Status = PlayerState.WallTop;
 
@@ -234,10 +281,9 @@ public partial class Amos : CharacterBody2D
 			return;
 		}
 
-		// ============================================================
-		// WALL
-		// ============================================================
-
+		/*
+		 * Está escalando.
+		 */
 		if (_wall.IsAttached)
 		{
 			Status = PlayerState.Wall;
@@ -249,12 +295,9 @@ public partial class Amos : CharacterBody2D
 			return;
 		}
 
-		// ============================================================
-		// NORMAL MOVEMENT
-		// ============================================================
-
-		// Informa ao JumpController que o jogador pressionou
-		// o botão de pulo.
+		/*
+		 * Movimento normal.
+		 */
 		if (Input.IsActionJustPressed("Jump_Space"))
 		{
 			_jump.PressJump();
@@ -294,25 +337,39 @@ public partial class Amos : CharacterBody2D
 
 		MoveAndSlide();
 	}
+
 	public override void _Ready()
 	{
-		_animator = GetNode<AnimatedSprite2D>(
-			"AnimatedSprite2D"
-		);
+		_animator =
+			GetNode<AnimatedSprite2D>(
+				"AnimatedSprite2D"
+			);
 
 		RayCast2D leftRay =
-			GetNode<RayCast2D>("LeftWallDetected");
+			GetNode<RayCast2D>(
+				"LeftWallDetected"
+			);
 
 		RayCast2D rightRay =
-			GetNode<RayCast2D>("RightWallDetected");
+			GetNode<RayCast2D>(
+				"RightWallDetected"
+			);
 
-		RayCast2D topRay =
-			GetNode<RayCast2D>("TopWallDetected");
+		RayCast2D topRayRight =
+			GetNode<RayCast2D>(
+				"TopRayRight"
+			);
+
+		RayCast2D topRayLeft =
+			GetNode<RayCast2D>(
+				"TopRayLeft"
+			);
 
 		_wall.Initialize(
 			leftRay,
 			rightRay,
-			topRay
+			topRayRight,
+			topRayLeft
 		);
 
 		GoToIdleState();
