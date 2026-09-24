@@ -8,6 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://dtx1e30g0fhnj" path="res://Assets/Sprite/Cave/camada2.png" id="5_jh6v4"]
 [ext_resource type="Texture2D" uid="uid://l0j1y3ayiiig" path="res://Assets/Sprite/Cave/camada1.png" id="6_0ws12"]
 [ext_resource type="Texture2D" uid="uid://chke1f2pyt4jo" path="res://Assets/Sprite/GeneralTiles/tileset atualizada.png" id="8_0ws12"]
+[ext_resource type="PackedScene" uid="uid://bjrwek0es7fj5" path="res://Entities/area_soul.tscn" id="9_nyysw"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_nyysw"]
 texture = ExtResource("8_0ws12")
@@ -142,3 +143,9 @@ tile_map_data = PackedByteArray("AAAAAAYAAAABAAAAAAABAAYAAAABAAAAAAACAAYAAAABAAA
 tile_set = SubResource("TileSet_7bsus")
 rendering_quadrant_size = 64
 physics_quadrant_size = 64
+
+[node name="Souls" type="Node" parent="." unique_id=1409752560]
+
+[node name="AreaSoul" parent="Souls" unique_id=1233204713 instance=ExtResource("9_nyysw")]
+z_index = 6
+position = Vector2(544.9404, 257.89258)

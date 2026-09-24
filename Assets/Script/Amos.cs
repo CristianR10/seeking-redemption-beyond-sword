@@ -5,12 +5,11 @@ public partial class Amos : CharacterBody2D
 	public const float Speed = 200.0f;
 
 	private AnimatedSprite2D _animator;
+	private AnimationController _animation;	
 
 	private readonly MovementController _movement = new();
 	private readonly JumpController _jump = new();
-	private readonly WallController _wall = new();
-
-	private string _currentAnim = "Idle";
+	private readonly WallController _wall = new();	
 
 	public enum PlayerState
 	{
@@ -24,31 +23,11 @@ public partial class Amos : CharacterBody2D
 
 	private PlayerState Status;
 
-	private void PlayAnimation(string animName)
-	{
-		if (_currentAnim == animName)
-			return;
-
-		if (_animator.SpriteFrames != null &&
-			_animator.SpriteFrames.HasAnimation(animName))
-		{
-			_animator.Play(animName);
-
-			_currentAnim = animName;
-		}
-		else
-		{
-			GD.Print(
-				$"Animação '{animName}' Não encontrada no AnimatedSprite2D"
-			);
-		}
-	}
-
 	public void GoToIdleState()
 	{
 		Status = PlayerState.Idle;
 
-		PlayAnimation("Idle");
+		_animation.Play("Idle");		
 	}
 
 	private void IdleState(float delta)
@@ -59,7 +38,7 @@ public partial class Amos : CharacterBody2D
 				delta
 			);
 
-		PlayAnimation("Idle");
+		_animation.Play("Idle");
 
 		if (Mathf.Abs(Velocity.X) > 1.0f)
 		{
@@ -75,7 +54,7 @@ public partial class Amos : CharacterBody2D
 				delta
 			);
 
-		PlayAnimation("Walk");
+		_animation.Play("Walk");
 
 		float inputX =
 			_movement.GetInputDirection();
@@ -100,7 +79,7 @@ public partial class Amos : CharacterBody2D
 				delta
 			);
 
-		PlayAnimation("Jump");
+		_animation.Play("Jump");
 
 		if (Velocity.Y > 0)
 		{
@@ -116,7 +95,7 @@ public partial class Amos : CharacterBody2D
 				delta
 			);
 
-		PlayAnimation("Down");
+		_animation.Play("Down");
 
 		if (IsOnFloor())
 		{
@@ -147,7 +126,7 @@ public partial class Amos : CharacterBody2D
 				Velocity
 			);
 
-		PlayAnimation("Wall");
+		_animation.Play("Wall");
 
 		_animator.FlipH =
 			_wall.ShouldFlipSprite();
@@ -180,7 +159,7 @@ public partial class Amos : CharacterBody2D
 
 	private void WallTopState(float delta)
 	{
-		PlayAnimation("WallTop");
+		_animation.Play("WallTop");
 
 		/*
 		 * Fica completamente parado.
@@ -344,6 +323,9 @@ public partial class Amos : CharacterBody2D
 			GetNode<AnimatedSprite2D>(
 				"AnimatedSprite2D"
 			);
+
+		_animation =
+			new AnimationController(_animator);
 
 		RayCast2D leftRay =
 			GetNode<RayCast2D>(

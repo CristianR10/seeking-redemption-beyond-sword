@@ -1,0 +1,101 @@
+[gd_scene format=3 uid="uid://bjrwek0es7fj5"]
+
+[ext_resource type="Texture2D" uid="uid://bpgt2w4nvhqjf" path="res://Assets/Sprite/Soul/souls.jpg" id="1_bj422"]
+[ext_resource type="Script" uid="uid://caax4e42bvj05" path="res://Assets/Script/AreaSoul.cs" id="1_vi1tf"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vi1tf"]
+atlas = ExtResource("1_bj422")
+region = Rect2(0, 0, 46, 59)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6vayx"]
+atlas = ExtResource("1_bj422")
+region = Rect2(46, 0, 46, 59)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_n2cx3"]
+atlas = ExtResource("1_bj422")
+region = Rect2(92, 0, 46, 59)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cmet4"]
+atlas = ExtResource("1_bj422")
+region = Rect2(138, 0, 46, 59)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vk8fw"]
+atlas = ExtResource("1_bj422")
+region = Rect2(0, 59, 46, 59)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_46ihj"]
+atlas = ExtResource("1_bj422")
+region = Rect2(46, 59, 46, 59)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_j036a"]
+atlas = ExtResource("1_bj422")
+region = Rect2(92, 59, 46, 59)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3i7v5"]
+atlas = ExtResource("1_bj422")
+region = Rect2(138, 59, 46, 59)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_in2qb"]
+atlas = ExtResource("1_bj422")
+region = Rect2(0, 118, 46, 59)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_g6t1a"]
+atlas = ExtResource("1_bj422")
+region = Rect2(46, 118, 46, 59)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_wu4yw"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vi1tf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6vayx")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_n2cx3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cmet4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vk8fw")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_46ihj")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_j036a")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3i7v5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_in2qb")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_g6t1a")
+}],
+"loop": true,
+"name": &"IdleSoul",
+"speed": 10.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_qxe2o"]
+
+[node name="AreaSoul" type="Area2D" unique_id=1233204713]
+script = ExtResource("1_vi1tf")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1018153692]
+light_mask = 8
+position = Vector2(0.30711365, -0.61022186)
+scale = Vector2(0.42892772, 0.42892772)
+sprite_frames = SubResource("SpriteFrames_wu4yw")
+animation = &"IdleSoul"
+frame_progress = 0.7793331
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=470154521]
+shape = SubResource("CapsuleShape2D_qxe2o")
+debug_color = Color(0.87058824, 0, 0.4392157, 0.5137255)
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
