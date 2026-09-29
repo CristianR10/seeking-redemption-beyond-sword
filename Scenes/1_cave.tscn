@@ -1,6 +1,7 @@
 [gd_scene format=4 uid="uid://827hlqdebq3r"]
 
 [ext_resource type="Texture2D" uid="uid://hb738q66clvp" path="res://Assets/Sprite/Cave/fase 1.png" id="1_0ws12"]
+[ext_resource type="PackedScene" uid="uid://dgyx0ert8kpd4" path="res://Entities/GlobalBars.tscn" id="1_7bsus"]
 [ext_resource type="PackedScene" uid="uid://b7n0pwm7kps0q" path="res://Entities/Amos.tscn" id="1_fjdx3"]
 [ext_resource type="PackedScene" uid="uid://bqv3er4nssq7q" path="res://Entities/Camera2d.tscn" id="1_jh6v4"]
 [ext_resource type="Texture2D" uid="uid://64qunvsktspn" path="res://Assets/Sprite/Cave/background.png" id="3_jh6v4"]
@@ -148,4 +149,36 @@ physics_quadrant_size = 64
 
 [node name="AreaSoul" parent="Souls" unique_id=1233204713 instance=ExtResource("9_nyysw")]
 z_index = 6
-position = Vector2(544.9404, 257.89258)
+position = Vector2(1643.3501, 421.8158)
+
+[node name="AreaSoul2" parent="Souls" unique_id=1970935605 instance=ExtResource("9_nyysw")]
+z_index = 6
+position = Vector2(2138.8428, 173.10187)
+
+[node name="AreaSoul3" parent="Souls" unique_id=1159198603 instance=ExtResource("9_nyysw")]
+z_index = 6
+position = Vector2(2780.4277, 399.95688)
+
+[node name="AreaSoul4" parent="Souls" unique_id=1982439634 instance=ExtResource("9_nyysw")]
+z_index = 6
+position = Vector2(799.1362, -150.82245)
+
+[node name="AreaSoul5" parent="Souls" unique_id=119547640 instance=ExtResource("9_nyysw")]
+z_index = 6
+position = Vector2(1949.2058, -218.90454)
+
+[node name="AreaSoul6" parent="Souls" unique_id=1436323125 instance=ExtResource("9_nyysw")]
+z_index = 6
+position = Vector2(2403.378, -278.03455)
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=2129476983]
+
+[node name="ProgressiveBar" type="Node" parent="CanvasLayer" unique_id=497361942]
+
+[node name="GlobalBars" parent="CanvasLayer/ProgressiveBar" unique_id=1767778161 instance=ExtResource("1_7bsus")]
+z_index = 8
+offset_left = 8.800018
+offset_top = 8.799988
+offset_right = 8.800018
+offset_bottom = 8.799988
+size_flags_horizontal = 4
