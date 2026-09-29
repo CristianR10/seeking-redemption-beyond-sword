@@ -2,14 +2,13 @@ using Godot;
 
 public class WallController
 {
-    private const float WallClimbSpeed = 100.0f;
-    private const float WallJumpForceX = 500.0f;
+    private const float WallClimbSpeed = 115.0f;
+    private const float WallJumpForceX = 280.0f;
     private const float WallJumpForceY = -500.0f;
-    private const float WallRayDisableTimeAfterTopJump = 0.50f;
+    private const float WallRayDisableTimeAfterTopJump = 0.12f;
 
     private RayCast2D _leftRay;
     private RayCast2D _rightRay;
-
     private RayCast2D _topRayRight;
     private RayCast2D _topRayLeft;
 

@@ -7,13 +7,14 @@ public class JumpController
     /// Altura máxima do pulo em pixels.
     /// 64 = 4 tiles de 16px.
     // public float JumpHeight = 85f; ideal
-    public float JumpHeight = 128f; //teste
+    public float JumpHeight = 96f; //teste
     /// Tempo até atingir o topo do pulo.
     /// Quanto menor, mais "seco" será o pulo.    
-    public float TimeToPeak = 0.35f;
+    public float TimeToPeak = 0.38f;// Tete
+    // public float TimeToPeak = 0.35f;
     /// Tempo para cair do topo até o chão.
     /// Menor = queda mais rápida.
-    public float TimeToFall = 0.25f;
+    public float TimeToFall = 0.30f;
     /// Tempo após sair da plataforma que ainda é permitido pular.
     public float CoyoteTime = 0.12f;
     /// Se apertar antes de tocar no chão, ele pula automaticamente.    
