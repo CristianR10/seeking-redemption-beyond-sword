@@ -1,0 +1,24 @@
+[gd_scene format=3 uid="uid://dgyx0ert8kpd4"]
+
+[ext_resource type="Script" uid="uid://w1v0uad26ctd" path="res://Assets/Script/GlobalBars.cs" id="1_fwb1q"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ophtt"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_od42r"]
+bg_color = Color(1, 0, 0, 1)
+
+[node name="GlobalBars" type="Control" unique_id=1767778161]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_fwb1q")
+
+[node name="ProgressBar" type="ProgressBar" parent="." unique_id=901107855]
+layout_mode = 0
+offset_right = 300.0
+offset_bottom = 27.0
+theme_override_styles/background = SubResource("StyleBoxFlat_ophtt")
+theme_override_styles/fill = SubResource("StyleBoxFlat_od42r")
+value = 100.0

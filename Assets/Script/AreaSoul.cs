@@ -14,6 +14,8 @@ public partial class AreaSoul : Area2D
 
 	public override void _Ready()
 	{
+		AddToGroup("area_soul");
+
 		_animator =
 			GetNode<AnimatedSprite2D>(
 				"AnimatedSprite2D"
@@ -33,6 +35,11 @@ public partial class AreaSoul : Area2D
 	{
 		if (body is Amos)
 		{
+			GlobalBars globalBars = GetTree()
+				.GetFirstNodeInGroup("global_bars") as GlobalBars;
+
+			globalBars?.SoulCollected();
+
 			QueueFree();
 		}
 	}
